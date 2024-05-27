@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GDShell="*res://addons/gdshell/scripts/gdshell_main.gd"
+ToastParty="*res://addons/toastparty/toast-autoload.gd"
 
 [dotnet]
 
@@ -26,7 +27,7 @@ project/assembly_name="steam-appdir-finder"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gdshell/plugin.cfg")
+enabled=PackedStringArray("res://addons/toastparty/plugin.cfg")
 
 [input]
 
