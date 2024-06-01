@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddfklydyb4ddt"]
+
+[ext_resource type="Script" path="res://scenes/searchable_item_list.gd" id="1_bn3vl"]
+[ext_resource type="Texture2D" uid="uid://7md460huhpxb" path="res://assets/Search.svg" id="2_q6bhc"]
+
+[node name="SearchableItemList" type="VBoxContainer"]
+offset_right = 292.0
+offset_bottom = 222.0
+script = ExtResource("1_bn3vl")
+
+[node name="SearchLineEdit" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Search..."
+right_icon = ExtResource("2_q6bhc")
+
+[node name="ItemList" type="ItemList" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+max_columns = 2
+same_column_width = true
