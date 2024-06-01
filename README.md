@@ -5,7 +5,7 @@
 ![Preview image](docs/preview.png)
 
 ### Godot version
-4.3.dev5
+4.3.beta1
 
 ### Supported platforms
 - Windows
