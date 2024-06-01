@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="steam-appdir-finder"
+config/version="0.2"
 run/main_scene="res://ui.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 run/low_processor_mode=true
@@ -18,7 +19,6 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GDShell="*res://addons/gdshell/scripts/gdshell_main.gd"
 ToastParty="*res://addons/toastparty/toast-autoload.gd"
 
 [dotnet]
@@ -28,11 +28,3 @@ project/assembly_name="steam-appdir-finder"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/toastparty/plugin.cfg")
-
-[input]
-
-gdshell_toggle_ui={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":96,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
