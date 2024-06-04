@@ -10,6 +10,9 @@ func _ready() -> void:
     for library_folder in _get_steam_library_folders():
         self._steam_apps.merge(self._get_steam_apps_from_library_folder(library_folder))
 
+    for shortcuts_vdf_path in _get_steam_shortcuts_vdf_paths():
+        self._steam_apps.merge(get_steam_apps_from_shortcuts_vdf_file(shortcuts_vdf_path))
+
     var steam_apps_item_dict := {}
     for steam_app in self._steam_apps.values():
         steam_apps_item_dict[steam_app.id] = steam_app.name
@@ -54,15 +57,53 @@ func _get_steam_apps_from_library_folder(library_folder_path: String) -> Diction
         var file_name = dir.get_next()
         while file_name != "":
             if not dir.current_is_dir() and file_name.get_extension() == 'acf':
-                var file_path := '%s/%s' % [dir.get_current_dir(), file_name]
-                var steam_app := SteamApp.new(file_path)
-                self._steam_apps[steam_app.id] = steam_app
+                var acf_file_path := '%s/%s' % [dir.get_current_dir(), file_name]
+                var steam_app := SteamAppFactory.from_acf_file(acf_file_path)
+                steam_apps[steam_app.id] = steam_app
             file_name = dir.get_next()
     else:
         print("An error occurred when trying to access the path.")
 
-    return self._steam_apps
+    return steam_apps
 
+
+func _get_steam_shortcuts_vdf_paths() -> Array[String]:
+    var os_name := OS.get_name()
+    var userdata_directory := ''
+
+    #/home/adam/.steam/root/userdata/186177082/config/shortcuts.vdf
+    if os_name == 'Windows':
+        userdata_directory = 'C:\\Program Files (x86)\\Steam\\userdata'
+    elif os_name == 'Linux':
+        userdata_directory = OS.get_environment("HOME") + '/.steam/root/userdata'
+
+    var shortcuts_vdf_paths: Array[String] = []
+    var dir := DirAccess.open(userdata_directory)
+    if dir:
+        dir.list_dir_begin()
+        var dir_name = dir.get_next()
+        while dir_name != "":
+            if dir.current_is_dir():
+                var vdf_file_path := '%s/%s/config/shortcuts.vdf' % [dir.get_current_dir(), dir_name]
+                if FileAccess.file_exists(vdf_file_path):
+                    shortcuts_vdf_paths.push_back(vdf_file_path)
+            dir_name = dir.get_next()
+    else:
+        print("An error occurred when trying to access directory: %s" % userdata_directory)
+
+    return shortcuts_vdf_paths
+
+
+func get_steam_apps_from_shortcuts_vdf_file(shortcuts_vdf_file_path: String) -> Dictionary:
+    var vdf_dict := VDFParser.load_vdf(shortcuts_vdf_file_path)
+    var shortcuts = vdf_dict['shortcuts']
+
+    var steam_apps := {}
+    for shortcut in shortcuts:
+        var steam_app := SteamAppFactory.from_vdf_dict(shortcuts[shortcut])
+        steam_apps[steam_app.id] = steam_app
+
+    return steam_apps
 
 func _on_steam_apps_item_list_item_selected(key: Variant) -> void:
     var steam_app: SteamApp = self._steam_apps[key]
